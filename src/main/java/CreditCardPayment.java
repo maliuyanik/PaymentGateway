@@ -1,10 +1,15 @@
-public class CreditCardIPayment extends BaseIPayment {
+import java.util.logging.Logger;
+
+public class CreditCardPayment extends BasePayment {
     private String cardNumber;
     private String cvv;
+    private double limit;
 
-    public CreditCardIPayment(String cardNumber, String cvv){
+    public CreditCardPayment(String cardNumber, String cvv, double limit, ILogger logger, INetworkConnection networkConnection){
+        super(logger, networkConnection);
         this.cardNumber = cardNumber;
         this.cvv = cvv;
+        this.limit = limit;
     }
 
     public String getCvv() {
@@ -20,10 +25,23 @@ public class CreditCardIPayment extends BaseIPayment {
     }
 //polymorphism for credit card transaction
     @Override
-    public void processPayment(double amount){
-        System.out.println("Transaction ID:" + getPaymentID());
-        System.out.println("Time:" + createdDate);
-        System.out.println("Processing credit card payment of" + amount + "for card" +  getMaskedCardNumber());
-        System.out.println("Status: Bank API contacted success.");
+    public PaymentStatus processPayment(double amount){
+        logger.log("Transaction ID:" + getPaymentID());
+        logger.log("Time:" + createdDate);
+        logger.log("Processing credit card payment of" + amount + "for card" +  getMaskedCardNumber());
+        if(amount > limit){
+            logger.log("FAILURE: Limit exceeded. (Limit: " + limit + ")");
+            return PaymentStatus.INSUFFICIENT_BALANCE;
+        }
+        if(!networkConnection.isConnected()){
+            logger.log("NETWORK CONNECTION ISSUE");
+            return PaymentStatus.NETWORK_ERROR;
+        }
+        logger.log("SUCCESS: Payment processed.");
+        return PaymentStatus.SUCCESS;
+    }
+
+    public void cardLimit(){
+
     }
 }

@@ -1,17 +1,19 @@
-public class CryptoIPayment extends BaseIPayment {
+public class CryptoPayment extends BasePayment {
     private String walletAdress;
+    private double limit;
 
-    public CryptoIPayment(String walletAdress) {
+    public CryptoPayment(String walletAdress) {
         this.walletAdress = walletAdress;
     }
 
     @Override
-    public void processPayment(double amount){
-        System.out.println("Transaction ID:" + getPaymentID());
-        System.out.println("Time:" + createdDate);
-        System.out.println("Processing crypto payment of "+ amount +" to wallet "+ walletAdress);
-        System.out.println("Status: Blockchain transaction verified.");
-
+    public PaymentStatus processPayment(double amount){
+        logger.log("Transaction ID:" + getPaymentID());
+        logger.log("Time:" + createdDate);
+        logger.log("Processing crypto payment of "+ amount +" to wallet "+ walletAdress);
+        logger.log("Status: Blockchain transaction verified.");
+        if(amount > limit) return PaymentStatus.INSUFFICIENT_BALANCE;
+        return PaymentStatus.SUCCESS;
     }
 
 

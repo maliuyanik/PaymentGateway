@@ -1,17 +1,26 @@
-package org.example;
+import java.util.ArrayList;
+import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        //dependencies
+        ILogger myLogger = new ConsoleLogger();
+        INetworkConnection myNetwork = new MockNetworkAdapter();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        //polymorphism, constructor injection
+        List<IPaymentProcessor> paymentQueue = new ArrayList<>();
+
+        //batch processing polymorphism
+        paymentQueue.add(new CreditCardPayment("1234567891234567", "123", 2000.0, myLogger, myNetwork));
+        paymentQueue.add(new CryptoPayment("0x123abc345def"));
+
+        System.out.println("--- Batch Processing Started ---\n");
+        for(IPaymentProcessor payment : paymentQueue){
+            PaymentStatus result = payment.processPayment(150.0);
+            if(result != PaymentStatus.SUCCESS){
+                System.out.println("ATTENTION: Process has been failed " + result.getDescription());
+            }
         }
+        System.out.println("------------------------------");
     }
 }
