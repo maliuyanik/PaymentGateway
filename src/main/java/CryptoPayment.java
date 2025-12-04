@@ -2,8 +2,10 @@ public class CryptoPayment extends BasePayment {
     private String walletAdress;
     private double limit;
 
-    public CryptoPayment(String walletAdress) {
+    public CryptoPayment(ILogger logger, INetworkConnection networkConnection, String walletAdress, double limit) {
+        super(logger, networkConnection);
         this.walletAdress = walletAdress;
+        this.limit = limit;
     }
 
     @Override
