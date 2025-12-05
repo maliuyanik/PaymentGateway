@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
 public class CreditCardPayment extends BasePayment {
@@ -6,19 +5,13 @@ public class CreditCardPayment extends BasePayment {
     private String cvv;
     private double limit;
 
-    public CreditCardPayment(String cardNumber, String cvv, double limit, ILogger logger, INetworkConnection networkConnection) throws CreditCardPaymentDenied{
+    public CreditCardPayment(String cardNumber, String cvv, double limit, ILogger logger, INetworkConnection networkConnection){
         super(logger, networkConnection);
-        try{
-            if(cardNumber != null && cvv != null){
-                this.cardNumber = cardNumber;
-                this.cvv = cvv;
-            }
-        }catch(CreditCardPaymentDenied e){
-            throw new CreditCardPaymentDenied();
+        if(cardNumber != null && cvv != null){
+            this.cardNumber = cardNumber;
+            this.cvv = cvv;
         }
-        finally {
-            this.limit = limit;
-        }
+        this.limit = limit;
     }
 
     public String getCvv() {

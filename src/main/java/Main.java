@@ -12,7 +12,7 @@ public class Main {
 
         //batch processing polymorphism
         paymentQueue.add(new CreditCardPayment("1234567891234567", "123", 2000.0, myLogger, myNetwork));
-        paymentQueue.add(new CryptoPayment("0x123abc345def"));
+
 
         System.out.println("--- Batch Processing Started ---\n");
         for(IPaymentProcessor payment : paymentQueue){
